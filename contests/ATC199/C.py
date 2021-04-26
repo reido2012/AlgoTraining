@@ -13,24 +13,28 @@ N = get_int()
 S = get_string_list()
 Q = get_int()
 
-indices = list(range(1, 2*N+1))
+flip = False
 
 for i in range(Q):
     transformation, a, b = get_int_list()
 
     if transformation == 1:
-        a = a - 1 if a >=1 else a
-        b = b - 1 if b >=1 else b
-        indices[a], indices[b] = indices[b], indices[a]
-        print(indices)
+        a -= 1
+        b -= 1
+
+        if flip:
+            # Transform a and b to what they would be if we had swapped the
+            # first N with the last N
+            a = ( a + N ) % ( 2 * N )
+            b = ( b + N ) % ( 2 * N )
+
+        # Swap ath and bth charcter
+        S[a], S[b] = S[b], S[a]
     else:
-        print(indices)
-        indices = list(map(lambda x: (x + N) % 2*N, indices))
-        print(indices)
+        # Flip between true and false
+        flip = not flip
 
-print(indices)
-result = []
-for idx in indices:
-    result.append(S[idx-1])
+if flip:
+    S[:N], S[N:] = S[N:], S[:N]
 
-print(''.join(result))
+print(''.join(S))
